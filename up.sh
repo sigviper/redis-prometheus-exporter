@@ -1,4 +1,4 @@
-docker-compose up -d --build
+docker-compose up -d --build -V
 echo "Initialize Redis values"
 docker-compose exec redis bash /app/init_redis.sh
 

@@ -1,31 +1,6 @@
 version: '3'
 
 services:
-#   nginx:
-#     image: nginx:latest
-#     restart: always
-#     volumes:
-#       - /app/nginx.conf:/etc/nginx/nginx.conf:ro
-#       - /app/.htpasswd:/etc/nginx/.htpasswd:ro
-#     ports:
-#       - 9090:9090
-
-#   blackbox:
-#     image: prom/blackbox-exporter
-#     restart: always
-#     volumes:
-#       - /app/blackbox.yaml:/config/blackbox.yaml:ro
-#     command: --config.file=/config/blackbox.yaml
-
-#   cloudwatch:
-#     image: prom/cloudwatch-exporter
-#     restart: always
-#     volumes:
-#       - /app/cloudwatch.yaml:/config/config.yml:ro
-#     environment:
-#       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY}
-#       AWS_SECRET_ACCESS_KEY: ${AWS_ACCESS_SECRET}
-
   redis:
     image: redis:latest
     restart: always
@@ -33,56 +8,10 @@ services:
        - ./redis/init_redis.sh:/app/init_redis.sh
     ports:
       - 6379:6379
-    # command: [
-    #    "--port 6380",
-    #    ""
-    # ]
 
   exporter:
     build: ./exporter/
     restart: always
     ports:
       - 8000:8000
-
-#   prometheus:
-#     image: prom/prometheus:latest
-#     restart: always
-#     volumes:
-#       - /app/prometheus.yaml:/etc/prometheus/prometheus.yaml:ro
-#       - /app/alerts:/etc/prometheus/alerts
-#       - /data:/prometheus
-#     command: [
-#       "--config.file=/etc/prometheus/prometheus.yaml",
-#       "--storage.tsdb.path=/prometheus",
-#       "--web.console.libraries=/usr/share/prometheus/console_libraries",
-#       "--web.console.templates=/usr/share/prometheus/consoles",
-#       "--web.external-url=${URL}"
-#     ]
-
-#   louketo:
-#     image: quay.io/keycloak/keycloak-gatekeeper
-#     restart: always
-#     command: [
-#       "--listen=0.0.0.0:19090",
-#       "--discovery-url=${OIDC_ISSUER_URL}",
-#       "--client-id=${OIDC_CLIENT_ID}",
-#       "--client-secret=${OIDC_CLIENT_SECRET}",
-#       "--upstream-url=http://prometheus:9090",
-#       "--skip-upstream-tls-verify=true",
-#       "--skip-openid-provider-tls-verify=false",
-#       "--enable-default-deny=true",
-#       "--enable-logging=true",
-#       "--enable-refresh-tokens=true",
-#       "--enable-session-cookies=true",
-#       "--enable-encrypted-token",
-#       "--encryption-key=${LOUKETO_ENCRYPTION_KEY}",
-#       "--resources=uri=/*|roles=devops-write",
-#       "--tls-cert=/opt/louketo/tls.crt",
-#       "--tls-private-key=/opt/louketo/tls.key",
-#       "--enable-metrics"
-#     ]
-#     volumes:
-#       - /etc/ssl/certs/ssl-cert-snakeoil.pem:/opt/louketo/tls.crt
-#       - /etc/ssl/private/ssl-cert-snakeoil.key:/opt/louketo/tls.key
-#     ports:
-#       - 19090:19090
+    env_file: ./exporter/settings.env
